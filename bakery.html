@@ -1,0 +1,115 @@
+<html>
+<head>
+  <title>Bakery Bonanza</title>
+  <style type="text/css">
+  #bakery .display div { width: 200px; height: 200px; float: left; }
+  #bakery .display .cupcake { background: url("http://i.imgur.com/9ix2JRZ.jpg"); }
+  #bakery .display .cookie { background: url("http://i.imgur.com/Yxq78qn.jpg"); }
+  #bakery .display .funnelcake { background: url("http://trialx.com/g/Funnel_Cake-4.jpg"); }
+  </style>
+   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.1.1/css/foundation.css">
+</head>
+<body>
+
+<h1>Store Manager:</h1>
+
+<h1>
+<div id="bakery">
+  <button class="make" data-good-type="cupcake">Make Cupcake</button>
+  <button class="make" data-good-type="cookie">Make Cookie</button>
+  <button class="make" data-good-type="funnelcake">Make Funnel Cake</button>
+
+  <!-- <label>Select what you'd like to make:
+    <select>
+      <option class="make" data-good-type="cupcake">Cupcake</option>
+      <option class="make" data-good-type="cookie">Cookie</option>
+      <option class="make" data-good-type="funnelcake">Funnel Cake</option>
+    </select>
+  </label>
+  <a href="#" class="button [radius round]">Radius Button</a> -->
+
+  <h4>Available Ingredients:</h4>
+  <ul class="ingredients">
+    <li class="flour">Flour: <span></span></li>
+    <li class="eggs">Eggs: <span></span></li>
+    <li class="sugar">Sugar: <span></span></li>
+    <li class="spice">Spice: <span></span></li>
+    <li class="cream">Cream: <span></span></li>
+  </ul>
+
+  <h1>For sale:</h1>
+  <div class="display"></div>
+</div>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+var bakery = {
+  supplies: {
+    flour: 10,
+    eggs: 12,
+    sugar: 17,
+    spice: 5,
+    cream: 5
+  },
+  goodRequirements: {
+    cupcake: {
+      flour: 2,
+      eggs: 1,
+      sugar: 1,
+    },
+    cookie: {
+      flour: 2,
+      eggs: 1,
+      sugar: 2,
+    },
+    funnelcake: {
+      flour: 3,
+      eggs: 2,
+      sugar: 3,
+      spice: 1,
+      cream: 2,
+    }
+  },
+  make: function (goodType) {
+    console.log('Attempting to make a:', goodType);
+    var req = this.goodRequirements[goodType];
+    var doAble = true;
+
+    for (var x in req){
+      if (this.supplies[x] < req[x]){
+        doAble = false;
+      }
+    }
+    if (doAble === true){
+      for (var x in req){
+        this.supplies[x] -= req[x];
+        this.updateIngredientsList();
+      }
+      console.log('The bakery made a ' + goodType + '!');
+      var goodDiv = $('<div>').addClass(goodType);
+      $('#bakery .display').append(goodDiv);
+    } else {
+      alert("Not enough supplies to make a " + goodType);
+    }
+  },
+  updateIngredientsList: function () {
+    $('.ingredients .flour span').text(this.supplies.flour);
+    $('.ingredients .eggs span').text(this.supplies.eggs);
+    $('.ingredients .sugar span').text(this.supplies.sugar);
+    $('.ingredients .spice span').text(this.supplies.spice);
+    $('.ingredients .cream span').text(this.supplies.cream);
+  }
+};
+
+$('#bakery .make').on('click', function (e) {
+  var goodType = $(e.currentTarget).data('good-type');
+  bakery.make(goodType);
+});
+
+bakery.updateIngredientsList();
+
+</script>
+</body>
+</html>
